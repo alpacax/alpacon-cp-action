@@ -18,13 +18,22 @@ Copy files and directories between your local machine and a remote server in you
 - **Upload target-path**: Can be either a specific file path or directory path.
 - **Recursive operations**: Use `recursive: true` for directory operations.
 
+## Prerequisites
+
+This action requires the Alpacon CLI to be installed in your workflow. Use the [Alpacon Setup Action](https://github.com/marketplace/actions/alpacon-setup-action) first:
+
+```yaml
+- name: Setup Alpacon CLI
+  uses: alpacax/alpacon-setup-action@v1.0.0
+```
+
 ## Usage
 
 
 ### Upload a file to a remote server
 ```yaml
 - name: Upload File
-  uses: alpacax/alpacon-cp-action@v1
+  uses: alpacax/alpacon-cp-action@v1.0.0
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -36,7 +45,7 @@ Copy files and directories between your local machine and a remote server in you
 ### Download a file from a remote server
 ```yaml
 - name: Download File
-  uses: alpacax/alpacon-cp-action@v1
+  uses: alpacax/alpacon-cp-action@v1.0.0
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -49,7 +58,7 @@ Copy files and directories between your local machine and a remote server in you
 ### Upload a directory recursively
 ```yaml
 - name: Upload Directory
-  uses: alpacax/alpacon-cp-action@v1
+  uses: alpacax/alpacon-cp-action@v1.0.0
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -62,7 +71,7 @@ Copy files and directories between your local machine and a remote server in you
 ### Download a directory recursively
 ```yaml
 - name: Download Directory
-  uses: alpacax/alpacon-cp-action@v1
+  uses: alpacax/alpacon-cp-action@v1.0.0
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
