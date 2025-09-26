@@ -1,0 +1,86 @@
+name: Test Alpacon CP Action
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-upload-download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Alpacon CLI
+        uses: alpacax/alpacon-setup-action@v1.0.0
+
+      - name: Create test file
+        run: echo "Test content for upload/download" > test-file.txt
+
+      - name: Test File Upload
+        uses: ./
+        with:
+          workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
+          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          source: './test-file.txt'
+          target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
+          target-path: '/tmp/test-upload.txt'
+
+      - name: Test File Download
+        uses: ./
+        with:
+          workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
+          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          source: '/tmp/test-upload.txt'
+          target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
+          target-path: './'
+          mode: download
+
+      - name: Verify downloaded file
+        run: |
+          echo "Current directory contents:"
+          ls -la
+          echo "Checking for downloaded file..."
+          if [ -f "test-upload.txt" ]; then
+            echo "✅ File downloaded successfully to current directory"
+            echo "File content:"
+            cat test-upload.txt
+            echo "Comparing with original file..."
+            if cmp -s "test-file.txt" "test-upload.txt"; then
+              echo "✅ Downloaded file matches original file"
+            else
+              echo "⚠️  Downloaded file differs from original"
+            fi
+          else
+            echo "❌ File download failed - looking for test-upload.txt in current directory"
+            echo "Available files:"
+            find . -maxdepth 1 -name "*test*" -type f 2>/dev/null || echo "No test files found"
+            exit 1
+          fi
+
+  test-recursive-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Alpacon CLI
+        uses: alpacax/alpacon-setup-action@v1.0.0
+
+      - name: Create test directory
+        run: |
+          mkdir -p test-dir/sub-dir
+          echo "File 1" > test-dir/file1.txt
+          echo "File 2" > test-dir/sub-dir/file2.txt
+
+      - name: Test Recursive Directory Upload
+        uses: ./
+        with:
+          workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
+          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          source: './test-dir/'
+          target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
+          target-path: '/tmp/test-upload-dir/'
+          recursive: true

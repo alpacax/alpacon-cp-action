@@ -1,0 +1,51 @@
+name: 'Alpacon CP Action'
+description: 'Copies files to a target server using alpacon cp.'
+author: sangyeong01
+
+branding:
+  icon: 'terminal'
+  color: 'blue'
+
+inputs:
+  workspace-url:
+    description: 'AlpacaX workspace URL.'
+    required: true
+  api-token:
+    description: 'Alpacon API token for authentication.'
+    required: true
+  source:
+    description: 'Source path. For upload: local file/directory. For download: remote server path.'
+    required: true
+  target-server:
+    description: 'Target server name.'
+    required: true
+  target-path:
+    description: 'Target path. For upload: remote server path. For download: local destination path.'
+    required: true
+  mode:
+    description: 'Direction of copy. "upload" (default) for local→server, "download" for server→local.'
+    required: false
+    default: 'upload'
+  recursive:
+    description: 'Set to true to copy directories recursively (-r option).'
+    required: false
+    default: 'false'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Login to Alpacon
+      run: alpacon login ${{ inputs.workspace-url }} -t ${{ inputs.api-token }}
+      shell: bash
+    - name: Execute CP
+      run: |
+        CP_CMD="alpacon cp"
+        if [ "${{ inputs.recursive }}" = "true" ]; then
+          CP_CMD="$CP_CMD -r"
+        fi
+        if [ "${{ inputs.mode }}" = "download" ]; then
+          $CP_CMD ${{ inputs.target-server }}:${{ inputs.source }} ${{ inputs.target-path }}
+        else
+          $CP_CMD ${{ inputs.source }} ${{ inputs.target-server }}:${{ inputs.target-path }}
+        fi
+      shell: bash
