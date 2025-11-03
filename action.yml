@@ -8,7 +8,7 @@ branding:
 
 inputs:
   workspace-url:
-    description: 'AlpacaX workspace URL.'
+    description: 'Alpacon workspace URL.'
     required: true
   api-token:
     description: 'Alpacon API token for authentication.'
