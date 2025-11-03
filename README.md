@@ -2,7 +2,7 @@
 
 # Alpacon CP Action
 
-Copy files and directories between your local machine and a remote server in your AlpacaX workspace using the `alpacon cp` command in GitHub Actions.
+Copy files and directories between your local machine and a remote server in your Alpacon workspace using the `alpacon cp` command in GitHub Actions.
 
 **Official Docs:** [alpacon cp](https://docs.alpacax.com/alpacon/cli/alpacon_cp)
 
@@ -12,7 +12,7 @@ Copy files and directories between your local machine and a remote server in you
 - Download files or folders from a remote server  
 - Supports recursive copy, user/group options, and multiple files
 
-## Important Notes
+## Important notes
 
 - **Download target-path**: Must be a directory path (e.g., `./`, `./data/`). The file will be saved with its original filename.
 - **Upload target-path**: Can be either a specific file path or directory path.
@@ -27,7 +27,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
   uses: alpacax/alpacon-setup-action@v1.0.0
 ```
 
-## Usage
+## Usage examples
 
 
 ### Upload a file to a remote server
@@ -86,7 +86,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 
 | Name           | Description                                                                 | Required |
 |----------------|-----------------------------------------------------------------------------|----------|
-| workspace-url  | AlpacaX workspace URL.                                                      | Yes      |
+| workspace-url  | Alpacon workspace URL.                                                      | Yes      |
 | api-token      | Alpacon API token for authentication.                                       | Yes      |
 | source         | Path to upload (local) or download (remote).                                | Yes      |
 | target-server  | Target server name.                                                         | Yes      |
