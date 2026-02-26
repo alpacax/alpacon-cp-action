@@ -1,5 +1,6 @@
 
 
+
 # Alpacon CP Action
 
 Copy files and directories between your local machine and a remote server in your Alpacon workspace using the `alpacon cp` command in GitHub Actions.
@@ -9,7 +10,7 @@ Copy files and directories between your local machine and a remote server in you
 ## Features
 
 - Upload files or folders to a remote server
-- Download files or folders from a remote server  
+- Download files or folders from a remote server
 - Supports recursive copy, user/group options, and multiple files
 
 ## Important notes
@@ -24,7 +25,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 
 ```yaml
 - name: Setup Alpacon CLI
-  uses: alpacax/alpacon-setup-action@v1.0.0
+  uses: alpacax/alpacon-setup-action@v1
 ```
 
 ## Usage examples
@@ -33,7 +34,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Upload a file to a remote server
 ```yaml
 - name: Upload File
-  uses: alpacax/alpacon-cp-action@v1.0.1
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -46,7 +47,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Download a file from a remote server
 ```yaml
 - name: Download File
-  uses: alpacax/alpacon-cp-action@v1.0.1
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -60,7 +61,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Upload a directory recursively
 ```yaml
 - name: Upload Directory
-  uses: alpacax/alpacon-cp-action@v1.0.1
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -74,7 +75,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Download a directory recursively
 ```yaml
 - name: Download Directory
-  uses: alpacax/alpacon-cp-action@v1.0.1
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -100,10 +101,18 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 | username       | Username for server authentication (optional).                              | No       |
 | groupname      | Group name for server authentication (optional).                            | No       |
 
+## Troubleshooting
+
+| Problem | Cause | Fix |
+|---------|-------|-----|
+| `alpacon: command not found` | CLI not installed | Add `alpacax/alpacon-setup-action@v1` before this action |
+| `login failed` | Invalid credentials | Verify `workspace-url` and `api-token` secrets are set correctly |
+| `No such file or directory` | Wrong source or target path | Check paths are correct for the selected `mode` |
+| `groupname requires username` | `groupname` set without `username` | Always set `username` when using `groupname` |
+
 ## Notes
 
 - For upload: `source` is a local path, `target-path` is the remote destination
 - For download: `source` is a remote path, `target-path` is the local destination
 - To copy multiple files, provide an array to `source`
 - See the [alpacon cp documentation](https://docs.alpacax.com/alpacon/cli/alpacon_cp) for advanced usage
-
