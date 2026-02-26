@@ -1,6 +1,3 @@
-
-
-
 # Alpacon CP Action
 
 Copy files and directories between your local machine and a remote server in your Alpacon workspace using the `alpacon cp` command in GitHub Actions.
