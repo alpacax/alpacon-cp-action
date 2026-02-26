@@ -43,7 +43,7 @@ runs:
     - name: Login to Alpacon
       run: |
         set -e
-        alpacon login ${{ inputs.workspace-url }} -t ${{ inputs.api-token }}
+        alpacon login "${{ inputs.workspace-url }}" -t "${{ inputs.api-token }}"
       shell: bash
     - name: Execute CP
       run: |
