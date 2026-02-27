@@ -46,29 +46,46 @@ runs:
         alpacon login "${{ inputs.workspace-url }}" -t "${{ inputs.api-token }}"
       shell: bash
     - name: Execute CP
+      env:
+        INPUT_USERNAME: ${{ inputs.username }}
+        INPUT_GROUPNAME: ${{ inputs.groupname }}
+        INPUT_RECURSIVE: ${{ inputs.recursive }}
+        INPUT_SOURCE: ${{ inputs.source }}
+        INPUT_MODE: ${{ inputs.mode }}
+        INPUT_TARGET_SERVER: ${{ inputs.target-server }}
+        INPUT_TARGET_PATH: ${{ inputs.target-path }}
       run: |
         set -e
         # Validate groupname requires username
-        if [[ -z "${{ inputs.username }}" && -n "${{ inputs.groupname }}" ]]; then
+        if [[ -z "$INPUT_USERNAME" && -n "$INPUT_GROUPNAME" ]]; then
           echo "Error: groupname requires username to be specified"
           exit 1
         fi
 
         # Build command args with optional flags
         CP_ARGS=(alpacon cp)
-        [[ "${{ inputs.recursive }}" = "true" ]] && CP_ARGS+=(-r)
-        [[ -n "${{ inputs.username }}" ]] && CP_ARGS+=(-u "${{ inputs.username }}")
-        [[ -n "${{ inputs.groupname }}" ]] && CP_ARGS+=(-g "${{ inputs.groupname }}")
+        [[ "$INPUT_RECURSIVE" = "true" ]] && CP_ARGS+=(-r)
+        [[ -n "$INPUT_USERNAME" ]] && CP_ARGS+=(-u "$INPUT_USERNAME")
+        [[ -n "$INPUT_GROUPNAME" ]] && CP_ARGS+=(-g "$INPUT_GROUPNAME")
 
         # Parse multiline source paths
         SOURCES=()
         while IFS= read -r src || [[ -n "$src" ]]; do
           [[ -n "$src" ]] && SOURCES+=("$src")
-        done <<< '${{ inputs.source }}'
+        done <<< "$INPUT_SOURCE"
 
-        if [ "${{ inputs.mode }}" = "download" ]; then
-          "${CP_ARGS[@]}" "${{ inputs.target-server }}:${SOURCES[0]}" "${{ inputs.target-path }}"
+        if [ "${#SOURCES[@]}" -eq 0 ]; then
+          echo "Error: no source paths provided"
+          exit 1
+        fi
+
+        if [ "$INPUT_MODE" = "download" ]; then
+          if [ "${#SOURCES[@]}" -gt 1 ]; then
+            echo "Error: download mode supports only a single source path, but ${#SOURCES[@]} were provided"
+            exit 1
+          fi
+          "${CP_ARGS[@]}" "$INPUT_TARGET_SERVER:${SOURCES[0]}" "$INPUT_TARGET_PATH"
         else
-          "${CP_ARGS[@]}" "${SOURCES[@]}" "${{ inputs.target-server }}:${{ inputs.target-path }}"
+          "${CP_ARGS[@]}" "${SOURCES[@]}" "$INPUT_TARGET_SERVER:$INPUT_TARGET_PATH"
         fi
       shell: bash

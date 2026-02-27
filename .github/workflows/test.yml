@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Alpacon CLI
-        uses: alpacax/alpacon-setup-action@v1.0.0
+        uses: alpacax/alpacon-setup-action@v1.1.0
 
       - name: Create test file
         run: echo "Test content for upload/download" > test-file.txt
@@ -70,7 +70,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Alpacon CLI
-        uses: alpacax/alpacon-setup-action@v1.0.0
+        uses: alpacax/alpacon-setup-action@v1.1.0
 
       - name: Create test directory
         run: |
@@ -96,7 +96,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Alpacon CLI
-        uses: alpacax/alpacon-setup-action@v1.0.0
+        uses: alpacax/alpacon-setup-action@v1.1.0
 
       - name: Create test file
         run: echo "Test content with username" > test-file-username.txt
@@ -140,7 +140,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Alpacon CLI
-        uses: alpacax/alpacon-setup-action@v1.0.0
+        uses: alpacax/alpacon-setup-action@v1.1.0
 
       - name: Create test files
         run: |

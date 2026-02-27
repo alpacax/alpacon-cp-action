@@ -31,7 +31,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Upload a file to a remote server
 ```yaml
 - name: Upload File
-  uses: alpacax/alpacon-cp-action@v1.2.0
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -44,7 +44,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Download a file from a remote server
 ```yaml
 - name: Download File
-  uses: alpacax/alpacon-cp-action@v1.2.0
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -58,7 +58,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Upload a directory recursively
 ```yaml
 - name: Upload Directory
-  uses: alpacax/alpacon-cp-action@v1.2.0
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -73,7 +73,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 
 ```yaml
 - name: Upload Multiple Files
-  uses: alpacax/alpacon-cp-action@v1.3.0
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -88,7 +88,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Download a directory recursively
 ```yaml
 - name: Download Directory
-  uses: alpacax/alpacon-cp-action@v1.2.0
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -127,5 +127,5 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 
 - For upload: `source` is a local path, `target-path` is the remote destination
 - For download: `source` is a remote path, `target-path` is the local destination
-- To copy multiple files, provide an array to `source`
+- To copy multiple files in upload mode, provide multiple paths to `source` (one per line)
 - See the [alpacon cp documentation](https://docs.alpacax.com/alpacon/cli/alpacon_cp) for advanced usage
