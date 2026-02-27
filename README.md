@@ -4,7 +4,7 @@
 
 Copy files and directories between your CI/CD runner and remote servers in your [Alpacon](https://alpacon.io) workspace — no SSH keys, SCP, or rsync configuration needed.
 
-- Official Docs: [alpacon-cp-action reference](https://docs.alpacax.com/reference/actions/cp/)
+- [Official documentation](https://docs.alpacax.com/reference/actions/cp/)
 
 ## Why use this action?
 
