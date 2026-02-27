@@ -14,7 +14,7 @@ inputs:
     description: 'Alpacon API token for authentication.'
     required: true
   source:
-    description: 'Source path. For upload: local file/directory. For download: remote server path.'
+    description: 'Source path(s). For upload: local file/directory (supports multiple paths, one per line). For download: remote server path (single path only).'
     required: true
   target-server:
     description: 'Target server name.'
@@ -54,20 +54,21 @@ runs:
           exit 1
         fi
 
-        # Build command with optional flags
-        CP_CMD="alpacon cp"
-        if [ "${{ inputs.recursive }}" = "true" ]; then
-          CP_CMD="$CP_CMD -r"
-        fi
-        if [[ -n "${{ inputs.username }}" && -n "${{ inputs.groupname }}" ]]; then
-          CP_CMD="$CP_CMD -u ${{ inputs.username }} -g ${{ inputs.groupname }}"
-        elif [[ -n "${{ inputs.username }}" ]]; then
-          CP_CMD="$CP_CMD -u ${{ inputs.username }}"
-        fi
+        # Build command args with optional flags
+        CP_ARGS=(alpacon cp)
+        [[ "${{ inputs.recursive }}" = "true" ]] && CP_ARGS+=(-r)
+        [[ -n "${{ inputs.username }}" ]] && CP_ARGS+=(-u "${{ inputs.username }}")
+        [[ -n "${{ inputs.groupname }}" ]] && CP_ARGS+=(-g "${{ inputs.groupname }}")
+
+        # Parse multiline source paths
+        SOURCES=()
+        while IFS= read -r src || [[ -n "$src" ]]; do
+          [[ -n "$src" ]] && SOURCES+=("$src")
+        done <<< '${{ inputs.source }}'
 
         if [ "${{ inputs.mode }}" = "download" ]; then
-          $CP_CMD ${{ inputs.target-server }}:${{ inputs.source }} ${{ inputs.target-path }}
+          "${CP_ARGS[@]}" "${{ inputs.target-server }}:${SOURCES[0]}" "${{ inputs.target-path }}"
         else
-          $CP_CMD ${{ inputs.source }} ${{ inputs.target-server }}:${{ inputs.target-path }}
+          "${CP_ARGS[@]}" "${SOURCES[@]}" "${{ inputs.target-server }}:${{ inputs.target-path }}"
         fi
       shell: bash

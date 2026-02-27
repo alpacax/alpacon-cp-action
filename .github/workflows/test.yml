@@ -132,3 +132,28 @@ jobs:
             echo "❌ File download with username failed"
             exit 1
           fi
+
+  test-multi-source-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Alpacon CLI
+        uses: alpacax/alpacon-setup-action@v1.0.0
+
+      - name: Create test files
+        run: |
+          echo "Multi source file 1" > multi-test1.txt
+          echo "Multi source file 2" > multi-test2.txt
+
+      - name: Test Multi-Source Upload
+        uses: ./
+        with:
+          workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
+          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          source: |
+            ./multi-test1.txt
+            ./multi-test2.txt
+          target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
+          target-path: '/tmp/'
