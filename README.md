@@ -31,7 +31,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Upload a file to a remote server
 ```yaml
 - name: Upload File
-  uses: alpacax/alpacon-cp-action@v1.2.0
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -44,7 +44,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Download a file from a remote server
 ```yaml
 - name: Download File
-  uses: alpacax/alpacon-cp-action@v1.2.0
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -58,7 +58,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 ### Upload a directory recursively
 ```yaml
 - name: Upload Directory
-  uses: alpacax/alpacon-cp-action@v1.2.0
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -69,10 +69,26 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
     username: ubuntu
 ```
 
+### Upload multiple files
+
+```yaml
+- name: Upload Multiple Files
+  uses: alpacax/alpacon-cp-action@v1
+  with:
+    workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
+    api-token: ${{ secrets.ALPACON_API_TOKEN }}
+    source: |
+      ./file1.txt
+      ./file2.txt
+    target-server: 'worker1'
+    target-path: '/data/'
+    username: ubuntu
+```
+
 ### Download a directory recursively
 ```yaml
 - name: Download Directory
-  uses: alpacax/alpacon-cp-action@v1.2.0
+  uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
     api-token: ${{ secrets.ALPACON_API_TOKEN }}
@@ -90,7 +106,7 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 |----------------|-----------------------------------------------------------------------------|----------|
 | workspace-url  | Alpacon workspace URL.                                                      | Yes      |
 | api-token      | Alpacon API token for authentication.                                       | Yes      |
-| source         | Path to upload (local) or download (remote).                                | Yes      |
+| source         | Source path(s). For upload: local file/directory (supports multiple paths, one per line). For download: remote server path (single path only). | Yes      |
 | target-server  | Target server name.                                                         | Yes      |
 | target-path    | Destination path (remote for upload, local for download).                   | Yes      |
 | mode           | "upload" (default) or "download".                                         | No       |
@@ -111,5 +127,5 @@ This action requires the Alpacon CLI to be installed in your workflow. Use the [
 
 - For upload: `source` is a local path, `target-path` is the remote destination
 - For download: `source` is a remote path, `target-path` is the local destination
-- To copy multiple files, provide an array to `source`
+- To copy multiple files in upload mode, provide multiple paths to `source` (one per line)
 - See the [alpacon cp documentation](https://docs.alpacax.com/alpacon/cli/alpacon_cp) for advanced usage
