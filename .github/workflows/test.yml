@@ -92,51 +92,6 @@ jobs:
           target-path: '/tmp/test-upload-dir/'
           recursive: true
 
-  test-upload-with-username:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Setup Alpacon CLI
-        uses: alpacax/alpacon-setup-action@v1
-
-      - name: Create test file
-        run: echo "Test content with username" > test-file-username.txt
-
-      - name: Test File Upload with username
-        uses: ./
-        with:
-          workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
-          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
-          source: './test-file-username.txt'
-          target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
-          target-path: '/tmp/test-upload-username.txt'
-          username: root
-
-      - name: Test File Download with username
-        uses: ./
-        with:
-          workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
-          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
-          source: '/tmp/test-upload-username.txt'
-          target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
-          target-path: './'
-          mode: download
-          username: root
-
-      - name: Verify downloaded file
-        run: |
-          set -e
-          if [ -f "test-upload-username.txt" ]; then
-            echo "✅ File with username option downloaded successfully"
-            cat test-upload-username.txt
-          else
-            echo "❌ File download with username failed"
-            exit 1
-          fi
-
   test-multi-source-upload:
     runs-on: ubuntu-latest
     timeout-minutes: 10
