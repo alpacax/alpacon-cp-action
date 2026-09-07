@@ -131,7 +131,11 @@ jobs:
       - name: Create test file
         run: echo "Validation test" > validation-test.txt
 
-      # groupname without username must be rejected by the action before any transfer
+      # Prove the credentials work so the failure below can only come from input validation
+      - name: Confirm login works
+        run: alpacon login "${{ secrets.TEST_ALPACON_WORKSPACE_URL }}" -t "${{ secrets.TEST_ALPACON_API_TOKEN }}"
+
+      # groupname without username must be rejected by the action before any copy is attempted
       - name: Reject groupname without username
         id: invalid
         continue-on-error: true
