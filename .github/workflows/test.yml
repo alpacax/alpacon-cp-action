@@ -186,7 +186,7 @@ jobs:
       - name: Confirm login works
         run: alpacon login "${{ secrets.TEST_ALPACON_WORKSPACE_URL }}" -t "${{ secrets.TEST_ALPACON_API_TOKEN }}"
 
-      # groupname without username must be rejected by the action before any copy is attempted
+      # The action must reject groupname without username before any copy is attempted
       - name: Reject groupname without username
         id: invalid
         continue-on-error: true
