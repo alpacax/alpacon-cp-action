@@ -117,3 +117,38 @@ jobs:
             ./multi-test2.txt
           target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
           target-path: '/tmp/'
+
+  test-groupname-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Alpacon CLI
+        uses: alpacax/alpacon-setup-action@v1
+
+      - name: Create test file
+        run: echo "Validation test" > validation-test.txt
+
+      # groupname without username must be rejected by the action before any transfer
+      - name: Reject groupname without username
+        id: invalid
+        continue-on-error: true
+        uses: ./
+        with:
+          workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
+          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          source: './validation-test.txt'
+          target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
+          target-path: '/tmp/validation-test.txt'
+          groupname: alpacon
+
+      - name: Verify the action rejected the input
+        run: |
+          set -e
+          if [ "${{ steps.invalid.outcome }}" != "failure" ]; then
+            echo "Expected the action to fail when groupname is set without username"
+            exit 1
+          fi
+          echo "Action rejected groupname without username as expected"
