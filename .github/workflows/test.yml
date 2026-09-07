@@ -131,7 +131,8 @@ jobs:
       - name: Create test file
         run: echo "Validation test" > validation-test.txt
 
-      # Prove the credentials work so the failure below can only come from input validation
+      # Credentials sanity check: a passing login here makes a failure in the next step
+      # attributable to input validation rather than to bad secrets
       - name: Confirm login works
         run: alpacon login "${{ secrets.TEST_ALPACON_WORKSPACE_URL }}" -t "${{ secrets.TEST_ALPACON_API_TOKEN }}"
 
