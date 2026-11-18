@@ -88,7 +88,7 @@ jobs:
 | Name | Description | Required | Default |
 |------|-------------|----------|---------|
 | `workspace-url` | Alpacon workspace URL | Yes | |
-| `api-token` | Alpacon service token key (`alpst-`) | Yes | |
+| `api-token` | Alpacon service token key (`alpst-`), recommended. A personal API token also works | Yes | |
 | `source` | Source path(s). Upload: local paths (supports multiple, one per line). Download: single remote path. | Yes | |
 | `target-server` | Target server name | Yes | |
 | `target-path` | Destination path (remote for upload, local for download) | Yes | |
