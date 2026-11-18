@@ -14,6 +14,16 @@ Copy files and directories between your CI/CD runner and remote servers in your 
 - **Recursive copy** — Transfer entire directory trees with one flag
 - **User/group control** — Set file ownership on the remote server during transfer
 
+## Authentication
+
+Use an Alpacon service token for `api-token`. A service token belongs to an IAM Application (a machine identity), not to a person, so it keeps working when people leave. Its access is limited by the token's scopes and its server, command, and file access rules.
+
+Store the token as a repository secret named `ALPACON_SERVICE_TOKEN`, as in the examples below. The input is named `api-token` for compatibility with published workflows and takes the service token as-is. Logging in with a service token (prefix `alpst-`) requires Alpacon CLI v1.7.4 or later.
+
+A personal API token still works, but depending on your Alpacon server release it may require an active, approved Work Session for command execution and file transfer. Service tokens do not need a Work Session for those operations; endpoint permissions still apply.
+
+See [Service tokens](https://docs.alpacax.com/use/iam/applications/service-tokens/) and the [GitHub Actions integration guide](https://docs.alpacax.com/integrate/github-actions/).
+
 ## Usage
 
 ### Upload build artifacts
@@ -35,7 +45,7 @@ jobs:
         uses: alpacax/alpacon-cp-action@v1
         with:
           workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
-          api-token: ${{ secrets.ALPACON_API_TOKEN }}
+          api-token: ${{ secrets.ALPACON_SERVICE_TOKEN }}
           source: './dist/'
           target-server: 'prod-server'
           target-path: '/var/www/app/'
@@ -49,7 +59,7 @@ jobs:
   uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
-    api-token: ${{ secrets.ALPACON_API_TOKEN }}
+    api-token: ${{ secrets.ALPACON_SERVICE_TOKEN }}
     source: |
       ./docker-compose.yml
       ./nginx.conf
@@ -66,7 +76,7 @@ jobs:
   uses: alpacax/alpacon-cp-action@v1
   with:
     workspace-url: ${{ secrets.ALPACON_WORKSPACE_URL }}
-    api-token: ${{ secrets.ALPACON_API_TOKEN }}
+    api-token: ${{ secrets.ALPACON_SERVICE_TOKEN }}
     source: '/var/log/app/error.log'
     target-server: 'prod-server'
     target-path: './logs/'
@@ -78,7 +88,7 @@ jobs:
 | Name | Description | Required | Default |
 |------|-------------|----------|---------|
 | `workspace-url` | Alpacon workspace URL | Yes | |
-| `api-token` | Alpacon API token for authentication | Yes | |
+| `api-token` | Alpacon service token key (`alpst-`) | Yes | |
 | `source` | Source path(s). Upload: local paths (supports multiple, one per line). Download: single remote path. | Yes | |
 | `target-server` | Target server name | Yes | |
 | `target-path` | Destination path (remote for upload, local for download) | Yes | |
