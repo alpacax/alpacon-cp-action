@@ -22,6 +22,15 @@ Store the token as a repository secret named `ALPACON_SERVICE_TOKEN`, as in the 
 
 See [Service tokens](https://docs.alpacax.com/use/iam/applications/service-tokens/) and the [GitHub Actions integration guide](https://docs.alpacax.com/integrate/github-actions/).
 
+## How access is controlled
+
+A service token is a separate path from the approved sessions that people and AI agents open in Alpacon. Its access is set before the workflow runs:
+
+- **Approved before first use**—A service token that can transfer files waits for approval in the Alpacon web console and authenticates nowhere until it is approved.
+- **Deny by default**—The token's access rules name the servers and file paths the workflow may use. Anything not listed is refused, and each run needs no further approval.
+- **Bounded**—You can limit the token to IP ranges and to hours and days of the week. It also has a rate limit and an expiry date.
+- **On the record**—Every file transfer is recorded in the workspace's WebFTP audit log.
+
 ## Usage
 
 ### Upload build artifacts
