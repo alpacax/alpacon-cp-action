@@ -27,7 +27,7 @@ jobs:
         uses: ./
         with:
           workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
-          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          service-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
           source: './test-file.txt'
           target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
           target-path: '/tmp/test-upload.txt'
@@ -36,7 +36,7 @@ jobs:
         uses: ./
         with:
           workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
-          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          service-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
           source: '/tmp/test-upload.txt'
           target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
           target-path: './'
@@ -89,7 +89,7 @@ jobs:
   #       uses: ./
   #       with:
   #         workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
-  #         api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+  #         service-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
   #         source: './test-dir/'
   #         target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
   #         target-path: '/tmp/test-upload-dir/'
@@ -114,7 +114,7 @@ jobs:
         uses: ./
         with:
           workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
-          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          service-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
           source: './test-file-username.txt'
           target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
           target-path: '/tmp/test-upload-username.txt'
@@ -124,7 +124,7 @@ jobs:
         uses: ./
         with:
           workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
-          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          service-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
           source: '/tmp/test-upload-username.txt'
           target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
           target-path: './'
@@ -161,7 +161,7 @@ jobs:
         uses: ./
         with:
           workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
-          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          service-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
           source: |
             ./multi-test1.txt
             ./multi-test2.txt
@@ -184,7 +184,10 @@ jobs:
       # Credentials sanity check: a passing login here makes a failure in the next step
       # attributable to input validation rather than to bad secrets
       - name: Confirm login works
-        run: alpacon login "${{ secrets.TEST_ALPACON_WORKSPACE_URL }}" -t "${{ secrets.TEST_ALPACON_API_TOKEN }}"
+        env:
+          WORKSPACE_URL: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
+          SERVICE_TOKEN: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+        run: alpacon login "$WORKSPACE_URL" -t "$SERVICE_TOKEN"
 
       # The action must reject groupname without username before any copy is attempted
       - name: Reject groupname without username
@@ -193,7 +196,7 @@ jobs:
         uses: ./
         with:
           workspace-url: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
-          api-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+          service-token: ${{ secrets.TEST_ALPACON_API_TOKEN }}
           source: './validation-test.txt'
           target-server: ${{ secrets.TEST_ALPACON_SERVER_NAME }}
           target-path: '/tmp/validation-test.txt'
