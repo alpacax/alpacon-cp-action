@@ -2,7 +2,7 @@
 
 [![GitHub marketplace](https://img.shields.io/badge/marketplace-alpacon--cp--action-blue?logo=github)](https://github.com/marketplace/actions/alpacon-cp-action)
 
-Copy files and directories between your CI/CD runner and remote servers in your [Alpacon](https://alpacon.io) workspace — no SSH keys, SCP, or rsync configuration needed.
+Copy files and directories between your CI/CD runner and remote servers in your [Alpacon](https://alpacon.io) workspace—no SSH keys, SCP, or rsync configuration needed.
 
 - [Official documentation](https://docs.alpacax.com/reference/actions/cp/)
 
@@ -115,9 +115,9 @@ jobs:
 
 ## Related actions
 
-- [alpacon-setup-action](https://github.com/alpacax/alpacon-setup-action) — Install Alpacon CLI (required)
-- [alpacon-exec-action](https://github.com/alpacax/alpacon-exec-action) — Execute shell commands on remote servers
-- [alpacon-common-action](https://github.com/alpacax/alpacon-common-action) — Run any Alpacon CLI command
+- [alpacon-setup-action](https://github.com/alpacax/alpacon-setup-action)—Install Alpacon CLI (required)
+- [alpacon-exec-action](https://github.com/alpacax/alpacon-exec-action)—Execute shell commands on remote servers
+- [alpacon-common-action](https://github.com/alpacax/alpacon-common-action)—Run any Alpacon CLI command
 
 ## Resources
 

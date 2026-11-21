@@ -184,7 +184,10 @@ jobs:
       # Credentials sanity check: a passing login here makes a failure in the next step
       # attributable to input validation rather than to bad secrets
       - name: Confirm login works
-        run: alpacon login "${{ secrets.TEST_ALPACON_WORKSPACE_URL }}" -t "${{ secrets.TEST_ALPACON_API_TOKEN }}"
+        env:
+          WORKSPACE_URL: ${{ secrets.TEST_ALPACON_WORKSPACE_URL }}
+          SERVICE_TOKEN: ${{ secrets.TEST_ALPACON_API_TOKEN }}
+        run: alpacon login "$WORKSPACE_URL" -t "$SERVICE_TOKEN"
 
       # The action must reject groupname without username before any copy is attempted
       - name: Reject groupname without username
