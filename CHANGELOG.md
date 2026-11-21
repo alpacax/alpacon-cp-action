@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## v2.0.0
 
-- Docs: recommend a service token for `api-token`. No behavior change.
+- Breaking: replace the `api-token` input with `service-token`. To upgrade, change `api-token:` to `service-token:` and `@v1` to `@v2` in your workflows.
 
 ## v1.3.1
 
