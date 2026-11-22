@@ -96,7 +96,7 @@ jobs:
 | `target-path` | Destination path (remote for upload, local for download) | Yes | |
 | `mode` | `upload` (default) or `download` | No | `upload` |
 | `recursive` | Set to `true` to copy directories recursively | No | `false` |
-| `username` | Server account for file ownership. A service token transfers files only as its application's account, never as `root` | No | |
+| `username` | Server account for file ownership. Leave it empty or set it to the application's account; any other account is refused | No | |
 
 ## Important notes
 
@@ -111,8 +111,9 @@ jobs:
 |---------|-------|-----|
 | `alpacon: command not found` | CLI not installed | Add `alpacax/alpacon-setup-action@v1` before this action |
 | `Login failed` | Wrong workspace URL or token; the token is expired, disabled or still waiting for approval; or the runner is outside the token's allowed IP ranges or hours | Check both secrets, and the token's status and restrictions in the web console |
-| `Permission denied uploading to …` (or downloading) | The server, the path, or the direction isn't in the token's access rules | Add a narrow rule for the server and path, allowing the direction that failed (upload or download) |
+| `permission denied by the file_acl gate` (code `api_token_acl_not_allowed`) | The server, the path, the account or the direction isn't in the token's file access rules | Add a narrow rule for the server and path the workflow uses, allowing the direction that failed (upload or download) |
 | `No such file or directory` | Wrong source or target path | Check paths are correct for the selected `mode` |
+
 ## Related actions
 
 - [alpacon-setup-action](https://github.com/alpacax/alpacon-setup-action)—Install Alpacon CLI (required)
