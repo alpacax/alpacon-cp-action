@@ -2,34 +2,30 @@
 
 [![GitHub marketplace](https://img.shields.io/badge/marketplace-alpacon--cp--action-blue?logo=github)](https://github.com/marketplace/actions/alpacon-cp-action)
 
-Copy files and directories between your CI/CD runner and remote servers in your [Alpacon](https://alpacon.io) workspace—no SSH keys, SCP, or rsync configuration needed.
+Copy files between GitHub Actions and your servers without handing your workflow an SSH key.
+
+An SSH key in a CI secret is usually a full shell on your server, not just a way to copy files. With this action, the runner signs in to [Alpacon](https://alpacon.io) with a service token that can transfer files only to and from the paths you list, on the servers you list. Alpacon is a server access platform: its agent on each server connects out to Alpacon, so no inbound port has to be open for the runner.
 
 - [Official documentation](https://docs.alpacax.com/reference/actions/cp/)
 
-## Why use this action?
+> Upgrading from `@v1`: change `alpacax/alpacon-cp-action@v1` to `alpacax/alpacon-cp-action@v2` and rename the `api-token` input to `service-token`. v2 accepts only a service token, which always transfers files with its account's own group, so a `groupname` value no longer has any effect. Remove it from your workflow.
 
-- **No SSH/SCP setup**—Transfer files using a service token; no deploy keys or known_hosts to manage
-- **Upload & download**—Move files in both directions between runner and server
-- **Multiple files**—Upload several files in a single step without scripting loops
-- **Recursive copy**—Transfer entire directory trees with one flag
-- **User/group control**—Set file ownership on the remote server during transfer
+## How access is controlled
+
+- **Only the paths you list**—The token's access rules name the servers and file paths it may use. Anything else is refused. Keep paths narrow: a `*` in a path rule spans subdirectories, and `*` alone allows every path.
+- **No interactive access**—A service token cannot open a terminal session, a tunnel, or the browser editor, and it never runs as `root`. Files are written as the server account its application owns.
+- **No inbound port**—The Alpacon agent on each server connects out. Nothing on the server listens for the runner, so the runner's changing IP addresses don't matter.
+- **Approved once, then unattended**—A token that can transfer files waits for approval in the Alpacon web console and authenticates nowhere until it is approved. Runs after that don't wait for anyone.
+- **Bounded**—Every token has an expiry date and a rate limit, and you can disable it at any time. You can also limit it to hours and days of the week, and, on runners with fixed addresses such as self-hosted runners, to IP ranges.
+- **On the record**—Every file transfer is recorded in the workspace audit log (Audit → Events → File transfers).
 
 ## Authentication
 
-Set `service-token` to an Alpacon service token (its key starts with `alpst-`). A service token belongs to an IAM Application (a machine identity), not to a person, so it keeps working when people leave. Its access is limited by the token's scopes and its server, command, and file access rules. A service token does not need a Work Session; endpoint permissions still apply.
+Set `service-token` to an Alpacon service token (its key starts with `alpst-`). A service token belongs to an IAM Application (a machine identity), not to a person, so it keeps working when people leave. A service token does not need a Work Session; endpoint permissions still apply.
 
 Store the token as a repository secret named `ALPACON_SERVICE_TOKEN`, as in the examples below. Logging in with a service token requires Alpacon CLI v1.7.4 or later.
 
 See [Service tokens](https://docs.alpacax.com/use/iam/applications/service-tokens/) and the [GitHub Actions integration guide](https://docs.alpacax.com/integrate/github-actions/).
-
-## How access is controlled
-
-A service token is a separate path from the approved sessions that people and AI agents open in Alpacon. Its access is set before the workflow runs:
-
-- **Approved before first use**—A service token that can transfer files waits for approval in the Alpacon web console and authenticates nowhere until it is approved.
-- **Deny by default**—The token's access rules name the servers and file paths the workflow may use. Anything not listed is refused, and each run needs no further approval.
-- **Bounded**—You can limit the token to IP ranges and to hours and days of the week. It also has a rate limit and an expiry date.
-- **On the record**—Every file transfer is recorded in the workspace's WebFTP audit log.
 
 ## Usage
 
@@ -73,7 +69,6 @@ jobs:
       ./.env.production
     target-server: 'prod-server'
     target-path: '/opt/myapp/'
-    username: ubuntu
 ```
 
 ### Download files from a server
@@ -101,10 +96,7 @@ jobs:
 | `target-path` | Destination path (remote for upload, local for download) | Yes | |
 | `mode` | `upload` (default) or `download` | No | `upload` |
 | `recursive` | Set to `true` to copy directories recursively | No | `false` |
-| `username` | Username for file ownership on the remote server | No | |
-| `groupname` | Group name for file ownership (requires username) | No | |
-
-`groupname` cannot be used with a service token: files are transferred with the service account's private group, and a `groupname` value is ignored.
+| `username` | Server account for file ownership. Leave it empty or set it to the application's account; any other account is refused | No | |
 
 ## Important notes
 
@@ -118,9 +110,9 @@ jobs:
 | Problem | Cause | Fix |
 |---------|-------|-----|
 | `alpacon: command not found` | CLI not installed | Add `alpacax/alpacon-setup-action@v1` before this action |
-| `login failed` | Invalid credentials | Verify `workspace-url` and `service-token` secrets are set correctly |
+| `Login failed` | Wrong workspace URL or token; the token is expired, disabled or still waiting for approval; or the runner is outside the token's allowed IP ranges or hours | Check both secrets, and the token's status and restrictions in the web console |
+| `permission denied by the file_acl gate` (code `api_token_acl_not_allowed`) | The server, the path, the account or the direction isn't in the token's file access rules | Add a narrow rule for the server and path the workflow uses, allowing the direction that failed (upload or download) |
 | `No such file or directory` | Wrong source or target path | Check paths are correct for the selected `mode` |
-| `groupname requires username` | `groupname` set without `username` | Always set `username` when using `groupname` |
 
 ## Related actions
 
