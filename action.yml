@@ -1,5 +1,5 @@
 name: 'Alpacon CP Action'
-description: 'Copies files to a target server using alpacon cp.'
+description: 'Copy files between GitHub Actions and your servers without an SSH key or open port, only to the paths you list.'
 author: sangyeong01
 
 branding:
@@ -31,10 +31,7 @@ inputs:
     required: false
     default: 'false'
   username:
-    description: 'Username to execute the command as (e.g., root, ubuntu).'
-    required: false
-  groupname:
-    description: 'Group name to execute the command as.'
+    description: "Server account for file ownership. A service token transfers files only as its application's account, never as root."
     required: false
 
 runs:
@@ -52,7 +49,6 @@ runs:
     - name: Execute CP
       env:
         INPUT_USERNAME: ${{ inputs.username }}
-        INPUT_GROUPNAME: ${{ inputs.groupname }}
         INPUT_RECURSIVE: ${{ inputs.recursive }}
         INPUT_SOURCE: ${{ inputs.source }}
         INPUT_MODE: ${{ inputs.mode }}
@@ -60,17 +56,11 @@ runs:
         INPUT_TARGET_PATH: ${{ inputs.target-path }}
       run: |
         set -e
-        # Validate groupname requires username
-        if [[ -z "$INPUT_USERNAME" && -n "$INPUT_GROUPNAME" ]]; then
-          echo "Error: groupname requires username to be specified"
-          exit 1
-        fi
 
         # Build command args with optional flags
         CP_ARGS=(alpacon cp)
         [[ "$INPUT_RECURSIVE" = "true" ]] && CP_ARGS+=(-r)
         [[ -n "$INPUT_USERNAME" ]] && CP_ARGS+=(-u "$INPUT_USERNAME")
-        [[ -n "$INPUT_GROUPNAME" ]] && CP_ARGS+=(-g "$INPUT_GROUPNAME")
 
         # Parse multiline source paths
         SOURCES=()
