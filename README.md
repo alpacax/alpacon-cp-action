@@ -8,12 +8,12 @@ An SSH key in a CI secret is usually a full shell on your server, not just a way
 
 - [Official documentation](https://docs.alpacax.com/reference/actions/cp/)
 
-> Upgrading from `@v1`: change `alpacax/alpacon-cp-action@v1` to `alpacax/alpacon-cp-action@v2` and rename the `api-token` input to `service-token`. v2 accepts only a service token.
+> Upgrading from `@v1`: change `alpacax/alpacon-cp-action@v1` to `alpacax/alpacon-cp-action@v2` and rename the `api-token` input to `service-token`. v2 accepts only a service token, which always transfers files with its account's own group, so a `groupname` value no longer has any effect. Remove it from your workflow.
 
 ## How access is controlled
 
 - **Only the paths you list**—The token's access rules name the servers and file paths it may use. Anything else is refused. Keep paths narrow: a `*` in a path rule spans subdirectories, and `*` alone allows every path.
-- **No interactive access**—A service token cannot open a terminal session, a tunnel, or the file editor, and it never runs as `root`. Files are written as the server account its application owns.
+- **No interactive access**—A service token cannot open a terminal session, a tunnel, or the browser editor, and it never runs as `root`. Files are written as the server account its application owns.
 - **No inbound port**—The Alpacon agent on each server connects out. Nothing on the server listens for the runner, so the runner's changing IP addresses don't matter.
 - **Approved once, then unattended**—A token that can transfer files waits for approval in the Alpacon web console and authenticates nowhere until it is approved. Runs after that don't wait for anyone.
 - **Bounded**—Every token has an expiry date and a rate limit, and you can disable it at any time. You can also limit it to hours and days of the week, and, on runners with fixed addresses such as self-hosted runners, to IP ranges.
@@ -111,7 +111,7 @@ jobs:
 |---------|-------|-----|
 | `alpacon: command not found` | CLI not installed | Add `alpacax/alpacon-setup-action@v1` before this action |
 | `Login failed` | Wrong workspace URL or token; the token is expired, disabled or still waiting for approval; or the runner is outside the token's allowed IP ranges or hours | Check both secrets, and the token's status and restrictions in the web console |
-| `Permission denied uploading to …` (or downloading) | The server, the path, or the direction isn't in the token's access rules | Add a narrow rule for the server and path the workflow uses |
+| `Permission denied uploading to …` (or downloading) | The server, the path, or the direction isn't in the token's access rules | Add a narrow rule for the server and path, allowing the direction that failed (upload or download) |
 | `No such file or directory` | Wrong source or target path | Check paths are correct for the selected `mode` |
 ## Related actions
 
