@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.1.0
+
+- Remove the `groupname` input. A service token always transfers files with its account's own group, so the input had no effect. A workflow that still sets it gets an unexpected-input warning and otherwise runs as before.
+- State in the action and `username` descriptions what a service token can do: copy only to the paths you list, only as its application's account, never as root.
+
 ## v2.0.0
 
 - Breaking: replace the `api-token` input with `service-token`. To upgrade, change `api-token:` to `service-token:` and `@v1` to `@v2` in your workflows.
